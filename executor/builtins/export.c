@@ -28,6 +28,14 @@ static	int	is_valid_key(char *key)
 	return (1);
 }
 
+static	int	export_error(char *arg)
+{
+	ft_putstr_fd("export: `", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd("': not a valid identifier\n", 2);
+	return (1);
+}
+
 static	int	export_one(char *arg, t_env *env)
 {
 	char	*eq;
@@ -35,15 +43,16 @@ static	int	export_one(char *arg, t_env *env)
 
 	eq = ft_strchr(arg, '=');
 	if (!eq)
+	{
+		if (!is_valid_key(arg))
+			return (export_error(arg));
 		return (0);
+	}
 	key = ft_substr(arg, 0, eq - arg);
 	if (!is_valid_key(key))
 	{
-		ft_putstr_fd("export: `", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
 		free(key);
-		return (1);
+		return (export_error(arg));
 	}
 	update_env(env, key, eq + 1);
 	free(key);

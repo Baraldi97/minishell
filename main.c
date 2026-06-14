@@ -50,6 +50,11 @@ static	void	shell_loop(t_shell *sh)
 		line = readline("minishell$ ");
 		if (!line)
 			break ;
+		if (g_signal == SIGINT)
+		{
+			sh->exit_status = 128 + SIGINT;
+			g_signal = 0;
+		}
 		if (*line)
 			add_history(line);
 		process_line(line, sh);

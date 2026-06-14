@@ -24,10 +24,10 @@ PRINTF		=	$(PRINTF_DIR)/libftprintf.a
 LIBS		=	$(LIBFT) $(PRINTF) -lreadline
 
 SRCS		=	main.c \
-				expander.c \
-				expander_utils.c \
-				expander_split.c \
-				expander_split2.c \
+				expander/expander.c \
+				expander/expander_utils.c \
+				expander/expander_split.c \
+				expander/expander_split2.c \
 				lexer/lexer.c \
 				lexer/lexer_utils.c \
 				parser/parser.c \

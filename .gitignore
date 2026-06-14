@@ -12,3 +12,6 @@ minishell_relatorio.pdf
 
 # Notas locais
 RESUMO_expander_aspas.md
+
+# Tester (não faz parte do projeto)
+minishell_tester/

@@ -19,6 +19,11 @@ int	builtin_cd(char **args, t_env *env)
 
 	if (!args[1])
 		return (0);
+	if (args[2])
+	{
+		ft_putstr_fd("cd: too many arguments\n", 2);
+		return (1);
+	}
 	oldpwd = getcwd(NULL, 0);
 	if (chdir(args[1]) != 0)
 	{
