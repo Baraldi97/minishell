@@ -47,6 +47,7 @@ SRCS		=	main.c \
 				executor/builtins/env.c \
 				executor/builtins/exit.c \
 				executor/builtins/export.c \
+				executor/builtins/export_print.c \
 				executor/builtins/pwd.c \
 				executor/builtins/unset.c \
 				executor/builtins/env/env_init.c \

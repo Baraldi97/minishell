@@ -12,20 +12,36 @@
 
 #include "minishell.h"
 
+static char	*cd_target(char **args, t_env *env)
+{
+	char	*home;
+
+	if (!args[1])
+	{
+		home = get_env_value(env, "HOME");
+		if (!home)
+			ft_putstr_fd("cd: HOME not set\n", 2);
+		return (home);
+	}
+	return (args[1]);
+}
+
 int	builtin_cd(char **args, t_env *env)
 {
 	char	*oldpwd;
 	char	*newpwd;
+	char	*target;
 
-	if (!args[1])
-		return (0);
-	if (args[2])
+	if (args[1] && args[2])
 	{
 		ft_putstr_fd("cd: too many arguments\n", 2);
 		return (1);
 	}
+	target = cd_target(args, env);
+	if (!target)
+		return (1);
 	oldpwd = getcwd(NULL, 0);
-	if (chdir(args[1]) != 0)
+	if (chdir(target) != 0)
 	{
 		perror("cd");
 		free(oldpwd);

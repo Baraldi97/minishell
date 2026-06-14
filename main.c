@@ -14,6 +14,20 @@
 
 sig_atomic_t	g_signal = 0;
 
+static	void	run_tokens(t_token *tokens, t_shell *sh)
+{
+	sh->cmds = parse(tokens);
+	if (sh->cmds)
+	{
+		expand(sh->cmds, sh);
+		execute(sh->cmds, sh);
+	}
+	free_commands(sh->cmds);
+	sh->cmds = NULL;
+	free_tokens(tokens);
+	sh->tokens = NULL;
+}
+
 static	void	process_line(char *line, t_shell *sh)
 {
 	t_token	*tokens;
@@ -32,16 +46,7 @@ static	void	process_line(char *line, t_shell *sh)
 		sh->tokens = NULL;
 		return ;
 	}
-	sh->cmds = parse(tokens);
-	if (sh->cmds)
-	{
-		expand(sh->cmds, sh);
-		execute(sh->cmds, sh);
-	}
-	free_commands(sh->cmds);
-	sh->cmds = NULL;
-	free_tokens(tokens);
-	sh->tokens = NULL;
+	run_tokens(tokens, sh);
 }
 
 static	void	shell_loop(t_shell *sh)

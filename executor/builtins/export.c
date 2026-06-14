@@ -64,6 +64,8 @@ int	builtin_export(char **args, t_env *env)
 	int	i;
 	int	status;
 
+	if (!args[1])
+		return (export_list(env));
 	i = 1;
 	status = 0;
 	while (args[i])

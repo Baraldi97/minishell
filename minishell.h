@@ -101,6 +101,7 @@ int			builtin_cd(char **args, t_env *env);
 int			builtin_echo(char **args);
 int			builtin_exit(char **args, t_shell *sh);
 int			builtin_export(char **args, t_env *env);
+int			export_list(t_env *env);
 int			builtin_pwd(void);
 int			builtin_env(t_env *env);
 int			builtin_unset(char **args, t_shell *sh);
