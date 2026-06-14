@@ -34,13 +34,6 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-typedef struct s_shell
-{
-	t_env		*env;
-	t_command	*cmds;
-	int			exit_status;
-}	t_shell;
-
 typedef struct s_pipe
 {
 	int		pp[2];
@@ -83,10 +76,17 @@ typedef struct s_command
 	struct s_command	*next;
 }	t_command;
 
+typedef struct s_shell
+{
+	t_env		*env;
+	t_command	*cmds;
+	int			exit_status;
+}	t_shell;
+
 //executor
 extern sig_atomic_t	g_signal;
 int			setup_redirections(t_command *cmd, t_shell *sh);
-int			create_heredoc(t_redir *redir, t_shell *sh)
+int			create_heredoc(t_redir *redir, t_shell *sh);
 char		*find_path(char *cmd, t_env *env);
 void		free_all(t_shell *sh);
 void		execute(t_command *cmds, t_shell *sh);
@@ -135,5 +135,13 @@ t_command	*parse(t_token *tokens);
 t_command	*parse_command(t_token **tokens);
 void		parse_args(t_token **tokens, t_command *cmd);
 void		parse_redir(t_token **tokens, t_command *cmd);
+//expander
+void		expand(t_command *cmds, t_shell *sh);
+void		expand_command(t_command *cmd, t_shell *sh);
+void		expand_redirs(t_redir *redir, t_shell *sh);
+char		*expand_line(char *str, t_shell *sh);
+char		*get_var_value(char *str, int *i, t_shell *sh);
+char		*append_str(char *result, char *piece);
+int			is_var_char(char c);
 
 #endif

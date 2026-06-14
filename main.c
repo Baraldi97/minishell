@@ -26,12 +26,16 @@ static	void	shell_loop(t_shell *sh)
 			break ;
 		if (*line)
 			add_history(line);
-		tokens = tokenize(line, sh->exit_status);
+		tokens = tokenize(line);
 		sh->cmds = parse(tokens);
 		if (sh->cmds)
+		{
+			expand(sh->cmds, sh);
 			execute(sh->cmds, sh);
+		}
 		free_commands(sh->cmds);
 		sh->cmds = NULL;
+		free_tokens(tokens);
 		free(line);
 	}
 }

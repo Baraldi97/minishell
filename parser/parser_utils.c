@@ -52,6 +52,7 @@ t_redir	*new_redir(t_token_type type, char *file)
 	else
 		new->file = NULL;
 	new->type = type;
+	new->expand = 1;
 	new->next = NULL;
 	return (new);
 }
