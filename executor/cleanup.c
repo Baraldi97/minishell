@@ -16,4 +16,5 @@ void	free_all(t_shell *sh)
 {
 	free_env(sh->env);
 	free_commands(sh->cmds);
+	free_tokens(sh->tokens);
 }

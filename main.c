@@ -19,6 +19,7 @@ static	void	process_line(char *line, t_shell *sh)
 	t_token	*tokens;
 
 	tokens = tokenize(line);
+	sh->tokens = tokens;
 	if (!tokens)
 	{
 		sh->exit_status = 2;
@@ -28,6 +29,7 @@ static	void	process_line(char *line, t_shell *sh)
 	{
 		sh->exit_status = 2;
 		free_tokens(tokens);
+		sh->tokens = NULL;
 		return ;
 	}
 	sh->cmds = parse(tokens);
@@ -39,6 +41,7 @@ static	void	process_line(char *line, t_shell *sh)
 	free_commands(sh->cmds);
 	sh->cmds = NULL;
 	free_tokens(tokens);
+	sh->tokens = NULL;
 }
 
 static	void	shell_loop(t_shell *sh)
@@ -70,6 +73,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	sh.env = env_init(envp);
 	sh.cmds = NULL;
+	sh.tokens = NULL;
 	sh.exit_status = 0;
 	setup_signals();
 	shell_loop(&sh);

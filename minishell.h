@@ -80,6 +80,7 @@ typedef struct s_shell
 {
 	t_env		*env;
 	t_command	*cmds;
+	t_token		*tokens;
 	int			exit_status;
 }	t_shell;
 
