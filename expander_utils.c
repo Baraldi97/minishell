@@ -57,3 +57,35 @@ char	*append_str(char *result, char *piece)
 	free(piece);
 	return (joined);
 }
+
+/*
+** Replaces every maximal run of whitespace in an unquoted expansion
+** with a single '\1' marker so the value can be word-split later.
+** Frees the input and returns a new string.
+*/
+char	*mark_whitespace(char *value)
+{
+	char	*result;
+	char	*piece;
+	int		i;
+
+	result = ft_strdup("");
+	i = 0;
+	while (value[i])
+	{
+		if (value[i] == ' ' || value[i] == '\t')
+		{
+			result = append_str(result, ft_strdup("\1"));
+			while (value[i] == ' ' || value[i] == '\t')
+				i++;
+		}
+		else
+		{
+			piece = ft_substr(value, i, 1);
+			result = append_str(result, piece);
+			i++;
+		}
+	}
+	free(value);
+	return (result);
+}

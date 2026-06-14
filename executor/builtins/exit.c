@@ -32,11 +32,14 @@ static	int	is_numeric(char *str)
 
 int	builtin_exit(char **args, t_shell *sh)
 {
+	unsigned char	code;
+
 	ft_putstr_fd("exit\n", 2);
 	if (!args[1])
 	{
+		code = sh->exit_status;
 		free_all(sh);
-		exit(sh->exit_status);
+		exit(code);
 	}
 	if (!is_numeric(args[1]))
 	{
@@ -48,6 +51,7 @@ int	builtin_exit(char **args, t_shell *sh)
 	}
 	if (args[2])
 		return (ft_putstr_fd("exit: too many arguments\n", 2), 1);
+	code = (unsigned char)ft_atoi(args[1]);
 	free_all(sh);
-	exit((unsigned char)ft_atoi(args[1]));
+	exit(code);
 }

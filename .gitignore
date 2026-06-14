@@ -1,0 +1,11 @@
+# Object files
+*.o
+
+# Libraries
+*.a
+
+# Executable
+minishell
+
+# Generated report
+minishell_relatorio.pdf

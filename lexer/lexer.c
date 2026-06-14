@@ -43,30 +43,17 @@ int	handle_word(char *input, int i, t_token **tokens)
 	char	*word;
 
 	start = i;
-	while (input[i] && input[i] != ' ' && input[i] != '\t'
-		&& input[i] != '|' && input[i] != '<' && input[i] != '>'
-		&& input[i] != '\'' && input[i] != '"')
-		i++;
-	word = ft_substr(input, start, i - start);
-	add_token(tokens, new_token(TOKEN_WORD, word));
-	free(word);
-	return (i - start);
-}
-
-int	handle_quotes(char *input, int i, t_token **tokens)
-{
-	char	quote;
-	int		start;
-	char	*word;
-
-	quote = input[i];
-	start = i;
-	i++;
-	while (input[i] && input[i] != quote)
-		i++;
-	if (!input[i])
-		return (-1);
-	i++;
+	while (input[i] && !is_word_break(input[i]))
+	{
+		if (input[i] == '\'' || input[i] == '"')
+		{
+			i = skip_quoted(input, i);
+			if (i == -1)
+				return (-1);
+		}
+		else
+			i++;
+	}
 	word = ft_substr(input, start, i - start);
 	add_token(tokens, new_token(TOKEN_WORD, word));
 	free(word);
@@ -79,19 +66,14 @@ static int	process_token(char *input, int *i, t_token **tokens)
 
 	if (input[*i] == ' ' || input[*i] == '\t')
 		return ((*i)++, 0);
-	if (input[*i] == '\'' || input[*i] == '"')
-	{
-		consumed = handle_quotes(input, *i, tokens);
-		if (consumed == -1)
-			return (-1);
-		*i += consumed;
-		return (0);
-	}
 	if (input[*i] == '|')
 		return (add_token(tokens, new_token(TOKEN_PIPE, "|")), (*i)++, 0);
 	if (input[*i] == '<' || input[*i] == '>')
 		return (*i += handle_redir(input, *i, tokens), 0);
-	*i += handle_word(input, *i, tokens);
+	consumed = handle_word(input, *i, tokens);
+	if (consumed == -1)
+		return (-1);
+	*i += consumed;
 	return (0);
 }
 

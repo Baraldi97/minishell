@@ -26,8 +26,7 @@ static	void	run_in_child(t_command *cmd, t_shell *sh)
 		exit(127);
 	}
 	execve(path, cmd->args, env_to_array(sh->env));
-	perror(cmd->args[0]);
-	exit(126);
+	exec_error(cmd->args[0]);
 }
 
 static	void	child_in_pipe(t_command *cmd, t_shell *sh, int prev, int *pp)

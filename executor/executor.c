@@ -12,45 +12,35 @@
 
 #include "minishell.h"
 
-static	void	cmd_not_found(t_shell *sh, char *name)
-{
-	ft_putstr_fd(name, 2);
-	ft_putstr_fd(": command not found\n", 2);
-	sh->exit_status = 127;
-}
-
 static	void	child_process(t_command *cmd, char *path, t_shell *sh)
 {
 	char	**envp;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (setup_redirections(cmd, sh) == -1)
 		exit(1);
 	envp = env_to_array(sh->env);
 	execve(path, cmd->args, envp);
-	perror(cmd->args[0]);
-	exit(126);
+	exec_error(cmd->args[0]);
 }
 
 static	void	exec_external(t_command *cmd, t_shell *sh)
 {
 	pid_t	pid;
-	int		status;
 	char	*path;
 
 	path = find_path(cmd->args[0], sh->env);
 	if (!path)
 		return (cmd_not_found(sh, cmd->args[0]));
+	signals_exec_mode();
 	pid = fork();
 	if (pid == -1)
-		return (perror("fork"), free(path));
+		return (perror("fork"), free(path), setup_signals());
 	if (pid == 0)
 		child_process(cmd, path, sh);
 	free(path);
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		sh->exit_status = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		sh->exit_status = 128 + WTERMSIG(status);
+	wait_child(pid, sh);
 }
 
 void	execute_cmd(t_command *cmd, t_shell *sh)

@@ -35,7 +35,8 @@ all:	$(NAME)
 $(NAME):	$(OBJECTS) $(INCLUDE)
 			$(AR) $(NAME) $(OBJECTS)
 
-.c.o:	$(CC) (CFLAGS) -I$(INCLUDE) -c $< -o $(<:.c=.o)
+%.o:		%.c $(INCLUDE)
+			$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 		$(RM) $(OBJECTS)

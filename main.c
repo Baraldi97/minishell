@@ -14,10 +14,36 @@
 
 sig_atomic_t	g_signal = 0;
 
+static	void	process_line(char *line, t_shell *sh)
+{
+	t_token	*tokens;
+
+	tokens = tokenize(line);
+	if (!tokens)
+	{
+		sh->exit_status = 2;
+		return ;
+	}
+	if (validate_tokens(tokens) == -1)
+	{
+		sh->exit_status = 2;
+		free_tokens(tokens);
+		return ;
+	}
+	sh->cmds = parse(tokens);
+	if (sh->cmds)
+	{
+		expand(sh->cmds, sh);
+		execute(sh->cmds, sh);
+	}
+	free_commands(sh->cmds);
+	sh->cmds = NULL;
+	free_tokens(tokens);
+}
+
 static	void	shell_loop(t_shell *sh)
 {
 	char	*line;
-	t_token	*tokens;
 
 	while (1)
 	{
@@ -26,16 +52,7 @@ static	void	shell_loop(t_shell *sh)
 			break ;
 		if (*line)
 			add_history(line);
-		tokens = tokenize(line);
-		sh->cmds = parse(tokens);
-		if (sh->cmds)
-		{
-			expand(sh->cmds, sh);
-			execute(sh->cmds, sh);
-		}
-		free_commands(sh->cmds);
-		sh->cmds = NULL;
-		free_tokens(tokens);
+		process_line(line, sh);
 		free(line);
 	}
 }

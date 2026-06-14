@@ -52,3 +52,21 @@ void	free_tokens(t_token *tokens)
 		tokens = next;
 	}
 }
+
+int	is_word_break(char c)
+{
+	return (c == ' ' || c == '\t' || c == '|' || c == '<' || c == '>');
+}
+
+int	skip_quoted(char *input, int i)
+{
+	char	quote;
+
+	quote = input[i];
+	i++;
+	while (input[i] && input[i] != quote)
+		i++;
+	if (!input[i])
+		return (-1);
+	return (i + 1);
+}

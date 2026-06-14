@@ -49,7 +49,10 @@ char	**env_to_array(t_env *env)
 	while (env)
 	{
 		tmp = ft_strjoin(env->key, "=");
-		arr[i] = ft_strjoin(tmp, env->value);
+		if (env->value)
+			arr[i] = ft_strjoin(tmp, env->value);
+		else
+			arr[i] = ft_strdup(tmp);
 		free(tmp);
 		env = env->next;
 		i++;

@@ -90,6 +90,9 @@ int			create_heredoc(t_redir *redir, t_shell *sh);
 char		*find_path(char *cmd, t_env *env);
 void		free_all(t_shell *sh);
 void		execute(t_command *cmds, t_shell *sh);
+void		exec_error(char *name);
+void		cmd_not_found(t_shell *sh, char *name);
+void		wait_child(pid_t pid, t_shell *sh);
 //builtins
 int			is_builtin(char *cmd);
 int			run_builtin(t_command *cmd, t_shell *sh);
@@ -121,7 +124,8 @@ void		add_token(t_token **lst, t_token *new);
 void		free_tokens(t_token *tokens);
 int			handle_redir(char *input, int i, t_token **tokens);
 int			handle_word(char *input, int i, t_token **tokens);
-int			handle_quotes(char *input, int i, t_token **tokens);
+int			is_word_break(char c);
+int			skip_quoted(char *input, int i);
 t_token		*tokenize(char *input);
 //parser
 void		free_commands(t_command *cmds);
@@ -142,6 +146,13 @@ void		expand_redirs(t_redir *redir, t_shell *sh);
 char		*expand_line(char *str, t_shell *sh);
 char		*get_var_value(char *str, int *i, t_shell *sh);
 char		*append_str(char *result, char *piece);
+char		*mark_whitespace(char *value);
 int			is_var_char(char c);
+char		**split_expanded(char *marked);
+char		**append_words(char **dst, char **words);
+void		free_args_array(char **arr);
+int			had_quotes(char *arg);
+char		**empty_word(void);
+void		strip_markers(char *s);
 
 #endif
